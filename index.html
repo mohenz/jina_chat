@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>지안 - Microsoft Teams</title>
+  
+  <!-- PWA & Mobile Meta -->
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1f1f1f" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="지안">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/img/jian_avatar.jpg">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="assets/css/teams.css">
+</head>
+<body>
+
+  <div id="app-container">
+    <!-- Teams Top Header -->
+    <header class="teams-header">
+      <div class="header-left">
+        <button class="back-btn" aria-label="뒤로 가기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="avatar-wrapper">
+          <img src="assets/img/jian_avatar.jpg" alt="지안" class="avatar-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Crect width=\'40\' height=\'40\' fill=\'%235B5FC7\'/%3E%3Ctext x=\'20\' y=\'26\' font-size=\'16\' fill=\'%23ffffff\' text-anchor=\'middle\'%3E지안%3C/text%3E%3C/svg%3E'">
+          <div class="status-badge" title="사용 가능"></div>
+        </div>
+
+        <div class="user-info">
+          <span class="user-name">지안</span>
+          <span class="user-status">사용 가능</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- 화상 통화 아이콘 -->
+        <button class="header-icon-btn" aria-label="화상 통화">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7"></polygon>
+            <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+          </svg>
+        </button>
+        <!-- 음성 통화 아이콘 -->
+        <button class="header-icon-btn" aria-label="음성 통화">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </button>
+        <!-- 더보기 아이콘 -->
+        <button class="header-icon-btn" aria-label="더보기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="19" cy="12" r="1"></circle>
+            <circle cx="5" cy="12" r="1"></circle>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat Message Stream -->
+    <main class="chat-stream" id="chat-stream">
+      <!-- 동적으로 렌더링되는 메시지 카드들이 여기에 삽입됩니다 -->
+
+      <!-- Typing Indicator -->
+      <div class="message-row other typing-indicator-row" id="typing-indicator" style="display: none;">
+        <img src="assets/img/jian_avatar.jpg" alt="지안" class="other-avatar">
+        <div class="typing-card">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Teams Input Composition Bar -->
+    <footer class="teams-input-bar">
+      <div class="input-row">
+        <textarea id="message-input" class="chat-textarea" placeholder="새 메시지를 입력하세요..." rows="1"></textarea>
+        
+        <button id="send-btn" class="send-btn" aria-label="전송" disabled>
+          <!-- 종이비행기 전송 아이콘 -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+
+      <div class="toolbar-row">
+        <!-- 플러스 첨부 아이콘 -->
+        <button class="tool-icon-btn" aria-label="추가 첨부">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <!-- 파일 클립 아이콘 -->
+        <button class="tool-icon-btn" aria-label="파일 첨부">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+          </svg>
+        </button>
+        <!-- 마이크 아이콘 -->
+        <button class="tool-icon-btn" aria-label="음성 녹음">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // 서비스 워커 등록
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+          console.warn('[SW Register Fail]:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

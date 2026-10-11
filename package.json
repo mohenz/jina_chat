@@ -1,0 +1,15 @@
+{
+  "name": "jian-chat",
+  "version": "1.0.0",
+  "description": "Brian과 지안의 1:1 전용 모바일 Teams 스타일 메신저",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "start": "node scripts/dev-server.mjs",
+    "check:syntax": "node --check scripts/dev-server.mjs && node --check api/chat.js && node --check api/history.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  },
+  "private": true
+}

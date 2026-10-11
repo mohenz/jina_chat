@@ -1,0 +1,21 @@
+{
+  "name": "지안 - Microsoft Teams",
+  "short_name": "지안",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#5b5fc7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/img/jian_avatar.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "assets/img/jian_avatar.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
