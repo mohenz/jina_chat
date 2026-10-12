@@ -282,7 +282,6 @@ function renderMessage(msg, prepend = false) {
         <span class="message-time">${timeStr}</span>
       </div>
       ${contentHtml}
-      <div class="msg-reactions" style="display: none;"></div>
     `;
   } else {
     row.innerHTML = `
@@ -298,9 +297,7 @@ function renderMessage(msg, prepend = false) {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
             듣기
           </button>
-          <button class="msg-action-btn btn-react" title="리액션">❤️</button>
         </div>
-        <div class="msg-reactions" style="display: none;"></div>
       </div>
     `;
 
@@ -311,28 +308,6 @@ function renderMessage(msg, prepend = false) {
         speakText(msg.text, speakBtn);
       });
     }
-
-    // 리액션 버튼 리스너 바인딩
-    const reactBtn = row.querySelector('.btn-react');
-    const reactionsBox = row.querySelector('.msg-reactions');
-    if (reactBtn && reactionsBox) {
-      reactBtn.addEventListener('click', () => {
-        reactionsBox.style.display = 'flex';
-        reactionsBox.innerHTML = `<span class="reaction-chip">❤️ 소중함</span>`;
-      });
-    }
-  }
-
-  // 카드 더블클릭 시 공감 리액션
-  const card = row.querySelector('.message-card, .stamp-card');
-  if (card) {
-    card.addEventListener('dblclick', () => {
-      const rxBox = row.querySelector('.msg-reactions');
-      if (rxBox) {
-        rxBox.style.display = 'flex';
-        rxBox.innerHTML = `<span class="reaction-chip">❤️ 온기</span>`;
-      }
-    });
   }
 
   if (prepend) {
