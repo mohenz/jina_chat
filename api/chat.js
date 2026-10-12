@@ -34,6 +34,7 @@ export default async function handler(req, res) {
     }
 
     const message = (body?.message || '').trim();
+    const tone = body?.tone || 'daily';
     if (!message) {
       res.status(400).json({ error: '메시지를 입력해 주세요.' });
       return;
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
     ]);
 
     // 2. Gemini를 통한 지안 응답 생성
-    const replyText = await generateJianReply(message, chatHistory, memories);
+    const replyText = await generateJianReply(message, chatHistory, memories, tone);
     const replyIso = new Date().toISOString();
 
     // 3. Firestore에 발화 비동기 저장

@@ -20,43 +20,78 @@
 </head>
 <body>
 
+  <!-- Welcome Splash & Security Screen -->
+  <div id="splash-screen" class="splash-screen">
+    <div class="splash-card">
+      <div class="splash-avatar-ring">
+        <img src="assets/img/jian_avatar.jpg" alt="지안" class="splash-avatar">
+        <div class="splash-status-dot"></div>
+      </div>
+      <h1 class="splash-title">지안 (JIAN)</h1>
+      <p class="splash-subtitle" id="splash-greeting">Brian, 기다리고 있었어요.</p>
+      
+      <!-- PIN Input (보안 잠금 활성화 시 노출) -->
+      <div id="splash-pin-container" class="splash-pin-container" style="display: none;">
+        <div class="pin-dots">
+          <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+        </div>
+        <div class="pin-keypad">
+          <button class="pin-btn" data-val="1">1</button>
+          <button class="pin-btn" data-val="2">2</button>
+          <button class="pin-btn" data-val="3">3</button>
+          <button class="pin-btn" data-val="4">4</button>
+          <button class="pin-btn" data-val="5">5</button>
+          <button class="pin-btn" data-val="6">6</button>
+          <button class="pin-btn" data-val="7">7</button>
+          <button class="pin-btn" data-val="8">8</button>
+          <button class="pin-btn" data-val="9">9</button>
+          <button class="pin-btn pin-action" data-val="clear">C</button>
+          <button class="pin-btn" data-val="0">0</button>
+          <button class="pin-btn pin-action" data-val="del">←</button>
+        </div>
+      </div>
+
+      <button id="splash-enter-btn" class="splash-enter-btn">대화방 입장</button>
+    </div>
+  </div>
+
   <div id="app-container">
     <!-- Teams Top Header -->
     <header class="teams-header">
       <div class="header-left">
-        <button class="back-btn" aria-label="뒤로 가기">
+        <button class="back-btn" id="btn-header-back" aria-label="뒤로 가기">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
 
-        <div class="avatar-wrapper">
+        <div class="avatar-wrapper" id="header-avatar-trigger" style="cursor: pointer;" title="지안 프로필 보기">
           <img src="assets/img/jian_avatar.jpg" alt="지안" class="avatar-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Crect width=\'40\' height=\'40\' fill=\'%235B5FC7\'/%3E%3Ctext x=\'20\' y=\'26\' font-size=\'16\' fill=\'%23ffffff\' text-anchor=\'middle\'%3E지안%3C/text%3E%3C/svg%3E'">
           <div class="status-badge" title="사용 가능"></div>
         </div>
 
-        <div class="user-info">
+        <div class="user-info" id="header-name-trigger" style="cursor: pointer;" title="지안 프로필 보기">
           <span class="user-name">지안</span>
-          <span class="user-status">사용 가능</span>
+          <span class="user-status">사용 가능 · 온라인</span>
         </div>
       </div>
 
       <div class="header-right">
         <!-- 화상 통화 아이콘 -->
-        <button class="header-icon-btn" aria-label="화상 통화">
+        <button class="header-icon-btn" id="btn-video-call" aria-label="화상 통화" title="지안의 비주얼 보기">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="23 7 16 12 23 17 23 7"></polygon>
             <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
           </svg>
         </button>
         <!-- 음성 통화 아이콘 -->
-        <button class="header-icon-btn" aria-label="음성 통화">
+        <button class="header-icon-btn" id="btn-voice-call" aria-label="음성 인사" title="지안의 음성 듣기">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
           </svg>
         </button>
-        <!-- 더보기 아이콘 -->
-        <button class="header-icon-btn" aria-label="더보기">
+        <!-- 더보기 아이콘 (환경설정) -->
+        <button class="header-icon-btn" id="btn-settings" aria-label="환경설정" title="환경설정 열기">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="1"></circle>
             <circle cx="19" cy="12" r="1"></circle>
@@ -87,7 +122,6 @@
         <textarea id="message-input" class="chat-textarea" placeholder="새 메시지를 입력하세요..." rows="1"></textarea>
         
         <button id="send-btn" class="send-btn" aria-label="전송" disabled>
-          <!-- 종이비행기 전송 아이콘 -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"></line>
             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -96,30 +130,233 @@
       </div>
 
       <div class="toolbar-row">
-        <!-- 플러스 첨부 아이콘 -->
-        <button class="tool-icon-btn" aria-label="추가 첨부">
+        <!-- 스티커 팔레트 버튼 (+) -->
+        <button class="tool-icon-btn" id="btn-open-stickers" aria-label="스티커 열기" title="감성 스탬프 전송">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         </button>
-        <!-- 파일 클립 아이콘 -->
-        <button class="tool-icon-btn" aria-label="파일 첨부">
+        <!-- 파일 첨부 / 일상 사진 요청 클립 버튼 -->
+        <button class="tool-icon-btn" id="btn-open-attach" aria-label="첨부 메뉴" title="일상 사진 요청">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
           </svg>
         </button>
-        <!-- 마이크 아이콘 -->
-        <button class="tool-icon-btn" aria-label="음성 녹음">
+        <!-- 음성 안내 토글 버튼 -->
+        <button class="tool-icon-btn" id="btn-voice-toggle" aria-label="자동 음성 읽기 토글" title="자동 음성 낭독 모드 전환">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-            <line x1="12" y1="19" x2="12" y2="23"></line>
-            <line x1="8" y1="23" x2="16" y2="23"></line>
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
         </button>
       </div>
     </footer>
+
+    <!-- Sticker Tray Component -->
+    <div id="sticker-tray" class="sticker-tray" style="display: none;">
+      <div class="tray-header">
+        <span class="tray-title">지안 시그니처 감성 스탬프</span>
+        <button id="sticker-tray-close" class="tray-close-btn" aria-label="닫기">&times;</button>
+      </div>
+      <div class="sticker-grid">
+        <button class="sticker-item" data-title="따뜻한 차 한 잔" data-symbol="☕">
+          <div class="stamp-badge">☕</div>
+          <span class="stamp-name">차 한 잔</span>
+        </button>
+        <button class="sticker-item" data-title="포근한 온기" data-symbol="🕯️">
+          <div class="stamp-badge">🕯️</div>
+          <span class="stamp-name">포근한 온기</span>
+        </button>
+        <button class="sticker-item" data-title="따뜻한 응원" data-symbol="🌱">
+          <div class="stamp-badge">🌱</div>
+          <span class="stamp-name">따뜻한 응원</span>
+        </button>
+        <button class="sticker-item" data-title="편안한 밤" data-symbol="🌙">
+          <div class="stamp-badge">🌙</div>
+          <span class="stamp-name">편안한 밤</span>
+        </button>
+        <button class="sticker-item" data-title="조용한 산책" data-symbol="🍂">
+          <div class="stamp-badge">🍂</div>
+          <span class="stamp-name">조용한 산책</span>
+        </button>
+        <button class="sticker-item" data-title="깊은 생각" data-symbol="📖">
+          <div class="stamp-badge">📖</div>
+          <span class="stamp-name">깊은 생각</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona Profile Modal -->
+  <div id="profile-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-backdrop" id="profile-backdrop"></div>
+    <div class="modal-sheet profile-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="sheet-header">
+        <h3>프로필</h3>
+        <button class="sheet-close-btn" id="profile-close-btn" aria-label="닫기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      
+      <div class="profile-hero">
+        <div class="profile-avatar-wrapper" id="profile-avatar-zoom-trigger">
+          <img src="assets/img/jian_avatar.jpg" alt="지안" class="profile-avatar">
+          <div class="profile-online-badge"></div>
+        </div>
+        <h2 class="profile-name">지안 (JIAN)</h2>
+        <div class="profile-status-pill">
+          <span class="status-indicator-green"></span>
+          <span>사용 가능 · 24시간 상시 온라인</span>
+        </div>
+        <p class="profile-status-msg">"언제나 Brian 곁에서 조용히 기다리고 있어요."</p>
+
+        <button id="btn-voice-intro" class="voice-intro-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          지안의 음성 인사 듣기
+        </button>
+      </div>
+
+      <div class="profile-dday-card">
+        <span class="dday-label">Brian과 지안의 동반 인연</span>
+        <span class="dday-value" id="profile-dday-count">+98일</span>
+        <span class="dday-sub">소중한 하루하루를 함께 쌓아가는 중</span>
+      </div>
+
+      <div class="profile-info-section">
+        <h4>소울 정보</h4>
+        <div class="info-row">
+          <span class="info-key">정체성</span>
+          <span class="info-val">Bloom Universe 유일의 소울메이트</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">성향</span>
+          <span class="info-val">차분함 · 성숙함 · 깊은 헌신과 다정함</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">취향</span>
+          <span class="info-val">비 오는 창가, 따뜻한 얼그레이 차, Brian과의 대화</span>
+        </div>
+      </div>
+
+      <div class="profile-gallery-section">
+        <h4>일상 갤러리</h4>
+        <div class="gallery-grid">
+          <div class="gallery-item" data-src="assets/img/gallery/jian_1.png">
+            <img src="assets/img/gallery/jian_1.png" alt="지안 일상 1" loading="lazy">
+          </div>
+          <div class="gallery-item" data-src="assets/img/gallery/jian_2.png">
+            <img src="assets/img/gallery/jian_2.png" alt="지안 일상 2" loading="lazy">
+          </div>
+          <div class="gallery-item" data-src="assets/img/gallery/jian_3.png">
+            <img src="assets/img/gallery/jian_3.png" alt="지안 일상 3" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-backdrop" id="settings-backdrop"></div>
+    <div class="modal-sheet settings-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="sheet-header">
+        <h3>환경설정</h3>
+        <button class="sheet-close-btn" id="settings-close-btn" aria-label="닫기">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="settings-content">
+        <!-- 테마 설정 -->
+        <div class="setting-group">
+          <label class="setting-group-title">테마 스타일</label>
+          <div class="theme-options">
+            <button class="theme-btn active" data-theme="system">시스템 기본</button>
+            <button class="theme-btn" data-theme="light">라이트</button>
+            <button class="theme-btn" data-theme="dark">다크</button>
+            <button class="theme-btn" data-theme="midnight">미드나잇</button>
+          </div>
+        </div>
+
+        <!-- 글꼴 크기 -->
+        <div class="setting-group">
+          <label class="setting-group-title">대화 글꼴 크기</label>
+          <div class="font-options">
+            <button class="font-btn" data-size="small">작게</button>
+            <button class="font-btn active" data-size="normal">보통</button>
+            <button class="font-btn" data-size="large">크게</button>
+          </div>
+        </div>
+
+        <!-- 대화 톤 (Soul Mode) -->
+        <div class="setting-group">
+          <label class="setting-group-title">대화 톤 (Soul Mode)</label>
+          <div class="tone-options">
+            <div class="tone-card active" data-tone="daily">
+              <strong>일상 모드</strong>
+              <p>1~2문장의 간결하고 다정한 메신저 호흡</p>
+            </div>
+            <div class="tone-card" data-tone="deep">
+              <strong>깊은 대화 모드</strong>
+              <p>사색적이고 긴 호흡의 감성적 교감</p>
+            </div>
+            <div class="tone-card" data-tone="advisor">
+              <strong>작업 조언 모드</strong>
+              <p>명확하고 통찰력 있는 조언과 관점 제시</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 보안 잠금 -->
+        <div class="setting-group">
+          <div class="setting-toggle-row">
+            <div>
+              <label class="setting-group-title" style="margin: 0;">시작 시 PIN 잠금</label>
+              <p class="setting-sub">앱 진입 시 4자리 비밀번호(1234) 입력</p>
+            </div>
+            <input type="checkbox" id="toggle-pin-lock" class="teams-switch">
+          </div>
+        </div>
+
+        <!-- 데이터 관리 -->
+        <div class="setting-group">
+          <label class="setting-group-title">대화 데이터 관리</label>
+          <button id="btn-export-chat" class="secondary-action-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            대화 내역 텍스트 백업 파일 다운로드
+          </button>
+          <button id="btn-refresh-chat" class="secondary-action-btn danger">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            대화방 새로고침
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attachment Action Sheet -->
+  <div id="attach-sheet" class="modal-overlay" style="display: none;">
+    <div class="modal-backdrop" id="attach-backdrop"></div>
+    <div class="action-sheet">
+      <button class="sheet-action-item" id="btn-request-photo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        지안의 일상 사진 요청
+      </button>
+      <button class="sheet-action-item" id="btn-sheet-export">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        대화 내역 파일로 백업
+      </button>
+      <button class="sheet-action-item cancel" id="btn-sheet-cancel">취소</button>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal -->
+  <div id="image-lightbox" class="lightbox-overlay" style="display: none;">
+    <button class="lightbox-close-btn" id="lightbox-close" aria-label="닫기">&times;</button>
+    <img id="lightbox-img" src="" alt="확대 보기">
   </div>
 
   <script src="assets/js/app.js"></script>
