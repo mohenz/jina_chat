@@ -3,11 +3,11 @@
  * Features: Teams UI, Splash/PIN lock, Persona Profile, Settings, Stickers, Reactions, TTS Voice, Daily Photo
  */
 
-const AVATAR_URL = 'assets/img/jian_avatar.jpg';
+const AVATAR_URL = 'assets/img/jian_avatar.jpg?v=3';
 const GALLERY_PHOTOS = [
-  'assets/img/gallery/jian_1.png',
-  'assets/img/gallery/jian_2.png',
-  'assets/img/gallery/jian_3.png'
+  'assets/img/gallery/body_1.png?v=3',
+  'assets/img/gallery/body_2.png?v=3',
+  'assets/img/gallery/body_3.png?v=3'
 ];
 
 // App State

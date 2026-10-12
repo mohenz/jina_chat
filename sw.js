@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jian-chat-v1';
+const CACHE_NAME = 'jian-chat-v3';
 const ASSETS = [
   './',
   './index.html',
