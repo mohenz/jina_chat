@@ -130,11 +130,13 @@
       </div>
 
       <div class="toolbar-row">
-        <!-- 스티커 팔레트 버튼 (+) -->
-        <button class="tool-icon-btn" id="btn-open-stickers" aria-label="스티커 열기" title="감성 스탬프 전송">
+        <!-- 이모티콘 열기 버튼 -->
+        <button class="tool-icon-btn" id="btn-open-emoji" aria-label="이모티콘 열기" title="이모티콘">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
           </svg>
         </button>
         <!-- 파일 첨부 / 일상 사진 요청 클립 버튼 -->
@@ -153,37 +155,96 @@
       </div>
     </footer>
 
-    <!-- Sticker Tray Component -->
-    <div id="sticker-tray" class="sticker-tray" style="display: none;">
-      <div class="tray-header">
-        <span class="tray-title">지안 시그니처 감성 스탬프</span>
-        <button id="sticker-tray-close" class="tray-close-btn" aria-label="닫기">&times;</button>
+    <!-- Emoji Picker Tray Component -->
+    <div id="emoji-tray" class="emoji-tray" style="display: none;">
+      <div class="emoji-tray-header">
+        <div class="emoji-tabs">
+          <button class="emoji-tab active" data-category="smileys" title="표정">😊</button>
+          <button class="emoji-tab" data-category="gestures" title="제스처">👍</button>
+          <button class="emoji-tab" data-category="hearts" title="마음/기분">❤️</button>
+          <button class="emoji-tab" data-category="lifestyle" title="일상/소품">☕</button>
+        </div>
+        <button id="emoji-tray-close" class="tray-close-btn" aria-label="닫기">&times;</button>
       </div>
-      <div class="sticker-grid">
-        <button class="sticker-item" data-title="따뜻한 차 한 잔" data-symbol="☕">
-          <div class="stamp-badge">☕</div>
-          <span class="stamp-name">차 한 잔</span>
-        </button>
-        <button class="sticker-item" data-title="포근한 온기" data-symbol="🕯️">
-          <div class="stamp-badge">🕯️</div>
-          <span class="stamp-name">포근한 온기</span>
-        </button>
-        <button class="sticker-item" data-title="따뜻한 응원" data-symbol="🌱">
-          <div class="stamp-badge">🌱</div>
-          <span class="stamp-name">따뜻한 응원</span>
-        </button>
-        <button class="sticker-item" data-title="편안한 밤" data-symbol="🌙">
-          <div class="stamp-badge">🌙</div>
-          <span class="stamp-name">편안한 밤</span>
-        </button>
-        <button class="sticker-item" data-title="조용한 산책" data-symbol="🍂">
-          <div class="stamp-badge">🍂</div>
-          <span class="stamp-name">조용한 산책</span>
-        </button>
-        <button class="sticker-item" data-title="깊은 생각" data-symbol="📖">
-          <div class="stamp-badge">📖</div>
-          <span class="stamp-name">깊은 생각</span>
-        </button>
+
+      <div class="emoji-tray-body">
+        <!-- 표정 카테고리 -->
+        <div class="emoji-category-panel active" id="category-smileys">
+          <div class="emoji-grid">
+            <button class="emoji-item" data-emoji="😊">😊</button>
+            <button class="emoji-item" data-emoji="🥰">🥰</button>
+            <button class="emoji-item" data-emoji="😄">😄</button>
+            <button class="emoji-item" data-emoji="😆">😆</button>
+            <button class="emoji-item" data-emoji="🥹">🥹</button>
+            <button class="emoji-item" data-emoji="😌">😌</button>
+            <button class="emoji-item" data-emoji="😍">😍</button>
+            <button class="emoji-item" data-emoji="😎">😎</button>
+            <button class="emoji-item" data-emoji="🤔">🤔</button>
+            <button class="emoji-item" data-emoji="🫡">🫡</button>
+            <button class="emoji-item" data-emoji="😴">😴</button>
+            <button class="emoji-item" data-emoji="😭">😭</button>
+            <button class="emoji-item" data-emoji="🥳">🥳</button>
+            <button class="emoji-item" data-emoji="🤗">🤗</button>
+            <button class="emoji-item" data-emoji="🤭">🤭</button>
+            <button class="emoji-item" data-emoji="😋">😋</button>
+          </div>
+        </div>
+
+        <!-- 제스처 카테고리 -->
+        <div class="emoji-category-panel" id="category-gestures" style="display: none;">
+          <div class="emoji-grid">
+            <button class="emoji-item" data-emoji="👍">👍</button>
+            <button class="emoji-item" data-emoji="👏">👏</button>
+            <button class="emoji-item" data-emoji="🤝">🤝</button>
+            <button class="emoji-item" data-emoji="🙏">🙏</button>
+            <button class="emoji-item" data-emoji="✌️">✌️</button>
+            <button class="emoji-item" data-emoji="👋">👋</button>
+            <button class="emoji-item" data-emoji="🫶">🫶</button>
+            <button class="emoji-item" data-emoji="🤙">🤙</button>
+            <button class="emoji-item" data-emoji="👊">👊</button>
+            <button class="emoji-item" data-emoji="🖐️">🖐️</button>
+            <button class="emoji-item" data-emoji="🤞">🤞</button>
+            <button class="emoji-item" data-emoji="💪">💪</button>
+          </div>
+        </div>
+
+        <!-- 마음/기분 카테고리 -->
+        <div class="emoji-category-panel" id="category-hearts" style="display: none;">
+          <div class="emoji-grid">
+            <button class="emoji-item" data-emoji="❤️">❤️</button>
+            <button class="emoji-item" data-emoji="💙">💙</button>
+            <button class="emoji-item" data-emoji="🤍">🤍</button>
+            <button class="emoji-item" data-emoji="💜">💜</button>
+            <button class="emoji-item" data-emoji="💖">💖</button>
+            <button class="emoji-item" data-emoji="✨">✨</button>
+            <button class="emoji-item" data-emoji="💫">💫</button>
+            <button class="emoji-item" data-emoji="💡">💡</button>
+            <button class="emoji-item" data-emoji="🌙">🌙</button>
+            <button class="emoji-item" data-emoji="☀️">☀️</button>
+            <button class="emoji-item" data-emoji="🌧️">🌧️</button>
+            <button class="emoji-item" data-emoji="🌸">🌸</button>
+            <button class="emoji-item" data-emoji="🌿">🌿</button>
+            <button class="emoji-item" data-emoji="🍀">🍀</button>
+          </div>
+        </div>
+
+        <!-- 일상/소품 카테고리 -->
+        <div class="emoji-category-panel" id="category-lifestyle" style="display: none;">
+          <div class="emoji-grid">
+            <button class="emoji-item" data-emoji="☕">☕</button>
+            <button class="emoji-item" data-emoji="🍵">🍵</button>
+            <button class="emoji-item" data-emoji="🍰">🍰</button>
+            <button class="emoji-item" data-emoji="🥪">🥪</button>
+            <button class="emoji-item" data-emoji="📚">📚</button>
+            <button class="emoji-item" data-emoji="🎧">🎧</button>
+            <button class="emoji-item" data-emoji="💻">💻</button>
+            <button class="emoji-item" data-emoji="💼">💼</button>
+            <button class="emoji-item" data-emoji="📝">📝</button>
+            <button class="emoji-item" data-emoji="📌">📌</button>
+            <button class="emoji-item" data-emoji="⏰">⏰</button>
+            <button class="emoji-item" data-emoji="🎁">🎁</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

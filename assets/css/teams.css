@@ -609,17 +609,95 @@ body.font-size-large .message-card { font-size: 16.5px; }
   animation: slideUpFade 0.2s ease-out;
 }
 
-.tray-header {
+.emoji-tray {
+  position: absolute;
+  bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
+  right: 12px;
+  background-color: var(--modal-bg);
+  border: 1px solid var(--modal-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  padding: 12px 14px 14px;
+  z-index: 20;
+  animation: slideUpFade 0.2s ease-out;
+  backdrop-filter: blur(12px);
+}
+
+.emoji-tray-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light);
 }
 
-.tray-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-sub);
+.emoji-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.emoji-tab {
+  background: var(--modal-sub-bg);
+  border: 1px solid var(--modal-border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+}
+
+.emoji-tab:hover {
+  background: var(--bg-hover);
+}
+
+.emoji-tab.active {
+  background: rgba(98, 100, 167, 0.15);
+  border-color: var(--teams-purple);
+  transform: translateY(-1px);
+}
+
+.emoji-tray-body {
+  max-height: 190px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 6px;
+  justify-items: center;
+  padding: 2px;
+}
+
+.emoji-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.12s ease;
+  user-select: none;
+}
+
+.emoji-item:hover {
+  background-color: var(--bg-hover);
+  transform: scale(1.18);
+}
+
+.emoji-item:active {
+  transform: scale(0.92);
+  background-color: var(--modal-sub-bg);
 }
 
 .tray-close-btn {
@@ -629,39 +707,12 @@ body.font-size-large .message-card { font-size: 16.5px; }
   color: var(--text-muted);
   cursor: pointer;
   line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
 }
 
-.sticker-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.sticker-item {
-  background-color: var(--modal-sub-bg);
-  border: 1px solid var(--modal-border);
-  border-radius: 12px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
-}
-
-.sticker-item:active {
-  transform: scale(0.96);
-  border-color: var(--teams-purple);
-}
-
-.stamp-badge {
-  font-size: 24px;
-}
-
-.stamp-name {
-  font-size: 12px;
-  font-weight: 500;
+.tray-close-btn:hover {
+  background: var(--bg-hover);
   color: var(--text-main);
 }
 

@@ -63,11 +63,13 @@ const dom = {
   btnExportChat: document.getElementById('btn-export-chat'),
   btnRefreshChat: document.getElementById('btn-refresh-chat'),
 
-  // Stickers & Attach
-  btnOpenStickers: document.getElementById('btn-open-stickers'),
-  stickerTray: document.getElementById('sticker-tray'),
-  stickerTrayClose: document.getElementById('sticker-tray-close'),
-  stickerItems: document.querySelectorAll('.sticker-item'),
+  // Emoji Picker & Attach
+  btnOpenEmoji: document.getElementById('btn-open-emoji'),
+  emojiTray: document.getElementById('emoji-tray'),
+  emojiTrayClose: document.getElementById('emoji-tray-close'),
+  emojiTabs: document.querySelectorAll('.emoji-tab'),
+  emojiPanels: document.querySelectorAll('.emoji-category-panel'),
+  emojiItems: document.querySelectorAll('.emoji-item'),
   btnOpenAttach: document.getElementById('btn-open-attach'),
   attachSheet: document.getElementById('attach-sheet'),
   attachBackdrop: document.getElementById('attach-backdrop'),
@@ -640,20 +642,57 @@ dom.btnRefreshChat.addEventListener('click', () => {
   loadHistory();
 });
 
-// 6. Stickers
-dom.btnOpenStickers.addEventListener('click', () => {
-  const isHidden = dom.stickerTray.style.display === 'none';
-  dom.stickerTray.style.display = isHidden ? 'block' : 'none';
-});
-dom.stickerTrayClose.addEventListener('click', () => dom.stickerTray.style.display = 'none');
+// 6. Emoji Picker
+function insertEmoji(emoji) {
+  const input = dom.messageInput;
+  const start = input.selectionStart || input.value.length;
+  const end = input.selectionEnd || input.value.length;
+  const val = input.value;
+  input.value = val.substring(0, start) + emoji + val.substring(end);
+  const nextPos = start + emoji.length;
+  input.focus();
+  input.setSelectionRange(nextPos, nextPos);
+  
+  // 높이 조절 및 전송 버튼 활성화 트리거
+  input.dispatchEvent(new Event('input'));
+}
 
-dom.stickerItems.forEach(item => {
-  item.addEventListener('click', () => {
-    dom.stickerTray.style.display = 'none';
-    const title = item.dataset.title;
-    const symbol = item.dataset.symbol;
-    sendMessage(title, true, symbol);
+dom.btnOpenEmoji.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isHidden = dom.emojiTray.style.display === 'none';
+  dom.emojiTray.style.display = isHidden ? 'block' : 'none';
+});
+
+dom.emojiTrayClose.addEventListener('click', () => {
+  dom.emojiTray.style.display = 'none';
+});
+
+dom.emojiTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    dom.emojiTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const targetCat = tab.dataset.category;
+    dom.emojiPanels.forEach(panel => {
+      panel.style.display = panel.id === `category-${targetCat}` ? 'block' : 'none';
+    });
   });
+});
+
+dom.emojiItems.forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const emoji = item.dataset.emoji;
+    insertEmoji(emoji);
+  });
+});
+
+// 외부 클릭 시 이모티콘 트레이 닫기
+document.addEventListener('click', (e) => {
+  if (dom.emojiTray.style.display !== 'none' &&
+      !dom.emojiTray.contains(e.target) &&
+      !dom.btnOpenEmoji.contains(e.target)) {
+    dom.emojiTray.style.display = 'none';
+  }
 });
 
 // 7. Attachments
