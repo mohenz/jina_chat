@@ -199,6 +199,7 @@ function setupSplash() {
   else if (hour >= 18 || hour < 5) greeting = '오늘 하루도 수고 많으셨어요, Brian.';
   
   dom.splashGreeting.textContent = greeting;
+  dom.splashScreen.classList.toggle('has-pin', !!pinEnabled);
 
   if (pinEnabled) {
     dom.splashPinContainer.style.display = 'flex';
