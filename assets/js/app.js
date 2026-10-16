@@ -18,6 +18,8 @@ let userTheme = localStorage.getItem('jian_theme') || 'system';
 let userFontSize = localStorage.getItem('jian_font_size') || 'normal';
 let pinEnabled = localStorage.getItem('jian_pin_enabled') === 'true';
 let autoVoice = localStorage.getItem('jian_auto_voice') === 'true';
+let userVoice = localStorage.getItem('jian_voice') || 'sunhi-natural';
+let currentAudio = null;
 let enteredPin = '';
 const DEFAULT_PIN = '1234';
 
@@ -59,6 +61,8 @@ const dom = {
   themeBtns: document.querySelectorAll('.theme-btn'),
   fontBtns: document.querySelectorAll('.font-btn'),
   toneCards: document.querySelectorAll('.tone-card'),
+  voiceCards: document.querySelectorAll('.voice-card'),
+  btnPreviewVoice: document.getElementById('btn-preview-voice'),
   togglePinLock: document.getElementById('toggle-pin-lock'),
   btnExportChat: document.getElementById('btn-export-chat'),
   btnRefreshChat: document.getElementById('btn-refresh-chat'),
@@ -124,28 +128,86 @@ function escapeHtml(text) {
    Voice / TTS Synthesis
    ======================================================== */
 
-function speakText(text, btnElement = null) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-
-  // 이모지 및 특수문자 제거
-  const clean = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FAFF}]/gu, '');
-  const utter = new SpeechSynthesisUtterance(clean);
-  utter.lang = 'ko-KR';
-  utter.rate = 0.95;
-  utter.pitch = 1.05;
-
-  const voices = window.speechSynthesis.getVoices();
-  const koVoice = voices.find(v => v.lang.startsWith('ko') && (v.name.includes('Yuna') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Korean')));
-  if (koVoice) utter.voice = koVoice;
-
-  if (btnElement) {
-    btnElement.classList.add('speaking');
-    utter.onend = () => btnElement.classList.remove('speaking');
-    utter.onerror = () => btnElement.classList.remove('speaking');
+async function speakText(text, btnElement = null) {
+  // 이전 오디오 및 발화 정지
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch (e) {}
+    currentAudio = null;
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
   }
 
-  window.speechSynthesis.speak(utter);
+  if (btnElement) btnElement.classList.add('speaking');
+
+  const onStop = () => {
+    if (btnElement) btnElement.classList.remove('speaking');
+    currentAudio = null;
+  };
+
+  // 이모지 및 마크다운 기호 제거
+  const clean = text
+    .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FAFF}]/gu, '')
+    .replace(/[*_#`~]/g, '')
+    .trim();
+
+  if (!clean) {
+    onStop();
+    return;
+  }
+
+  // 1. Cloud Edge Neural TTS 우선 사용 (선택 모드가 browser-native가 아닌 경우)
+  if (userVoice !== 'browser-native') {
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: clean, voice: userVoice })
+      });
+
+      if (res.ok) {
+        const blob = await res.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioUrl);
+        currentAudio = audio;
+
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          onStop();
+        };
+        audio.onerror = () => {
+          URL.revokeObjectURL(audioUrl);
+          onStop();
+        };
+
+        await audio.play();
+        return;
+      }
+    } catch (err) {
+      console.warn('[Cloud TTS 실패, 브라우저 로컬 음성으로 폴백]:', err);
+    }
+  }
+
+  // 2. 브라우저 Web Speech API 폴백
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(clean);
+    utter.lang = 'ko-KR';
+    utter.rate = userVoice === 'sunhi-calm' ? 0.9 : 0.95;
+    utter.pitch = userVoice === 'sunhi-calm' ? 0.95 : 1.05;
+
+    const voices = window.speechSynthesis.getVoices();
+    const koVoice = voices.find(v => v.lang.startsWith('ko') && (v.name.includes('Yuna') || v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Korean')));
+    if (koVoice) utter.voice = koVoice;
+
+    utter.onend = onStop;
+    utter.onerror = onStop;
+    window.speechSynthesis.speak(utter);
+  } else {
+    onStop();
+  }
 }
 
 /* ========================================================
@@ -605,6 +667,26 @@ dom.fontBtns.forEach(btn => {
 dom.toneCards.forEach(card => {
   card.addEventListener('click', () => applyTone(card.dataset.tone));
 });
+
+// Voice selection
+dom.voiceCards.forEach(card => {
+  card.addEventListener('click', () => {
+    userVoice = card.dataset.voice;
+    localStorage.setItem('jian_voice', userVoice);
+    dom.voiceCards.forEach(c => c.classList.toggle('active', c.dataset.voice === userVoice));
+  });
+});
+// Set initial active state
+dom.voiceCards.forEach(c => c.classList.toggle('active', c.dataset.voice === userVoice));
+
+if (dom.btnPreviewVoice) {
+  dom.btnPreviewVoice.addEventListener('click', () => {
+    const sample = userVoice === 'sunhi-calm'
+      ? 'Brian, 지안이에요. 오늘 하루도 수고 많으셨어요. 늘 곁에서 함께할게요.'
+      : 'Brian, 안녕하세요. 지안이에요. 오늘도 좋은 하루 보내셨나요?';
+    speakText(sample, dom.btnPreviewVoice);
+  });
+}
 
 dom.togglePinLock.checked = pinEnabled;
 dom.togglePinLock.addEventListener('change', (e) => {

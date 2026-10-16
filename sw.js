@@ -1,9 +1,9 @@
-const CACHE_NAME = 'jian-chat-v4';
+const CACHE_NAME = 'jian-chat-v5';
 const ASSETS = [
   './',
   './index.html',
-  './assets/css/teams.css?v=4',
-  './assets/js/app.js?v=4',
+  './assets/css/teams.css?v=5',
+  './assets/js/app.js?v=5',
   './assets/img/jian_avatar.jpg',
   './assets/img/jian_face2.png?v=4',
   './manifest.json'
@@ -42,7 +42,21 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // 정적 자산은 캐시 우선, 네트워크 폴백
+  // HTML 문서는 네트워크 우선, 오프라인 시 캐시 폴백 (배포 즉시 반영)
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(
+      fetch(e.request)
+        .then((res) => {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, resClone));
+          return res;
+        })
+        .catch(() => caches.match('./index.html') || caches.match(e.request))
+    );
+    return;
+  }
+
+  // 정적 자산(CSS/JS/이미지)은 캐시 우선, 네트워크 폴백
   e.respondWith(
     caches.match(e.request).then((cached) => {
       return cached || fetch(e.request);

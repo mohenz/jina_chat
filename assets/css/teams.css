@@ -1052,6 +1052,61 @@ body.font-size-large .message-card { font-size: 16.5px; }
   color: var(--teams-purple-dark);
 }
 
+.voice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voice-card {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--modal-border);
+  background-color: var(--modal-sub-bg);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.voice-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.voice-card strong {
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.voice-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background-color: rgba(91, 95, 199, 0.15);
+  color: var(--teams-purple);
+}
+
+.voice-badge.sub {
+  background-color: rgba(120, 120, 128, 0.15);
+  color: var(--text-sub);
+}
+
+.voice-card p {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 3px;
+}
+
+.voice-card.active {
+  border-color: var(--teams-purple);
+  background-color: var(--teams-purple-light);
+}
+
+.voice-card.active strong {
+  color: var(--teams-purple-dark);
+}
+
 .setting-toggle-row {
   display: flex;
   align-items: center;

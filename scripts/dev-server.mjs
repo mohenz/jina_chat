@@ -51,6 +51,10 @@ function createResponseAdapter(res) {
       res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(data));
     },
+    send(data) {
+      res.writeHead(statusCode);
+      res.end(data);
+    },
     end(data) {
       res.writeHead(statusCode);
       res.end(data);

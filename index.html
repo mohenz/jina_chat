@@ -16,7 +16,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="assets/css/teams.css?v=4">
+  <link rel="stylesheet" href="assets/css/teams.css?v=5">
 </head>
 <body>
 
@@ -371,6 +371,38 @@
           </div>
         </div>
 
+        <!-- 음성 엔진 설정 (AI Voice) -->
+        <div class="setting-group">
+          <label class="setting-group-title">지안 목소리 설정 (AI Voice)</label>
+          <div class="voice-options">
+            <div class="voice-card active" data-voice="sunhi-natural">
+              <div class="voice-card-header">
+                <strong>SunHi Neural (시그니처)</strong>
+                <span class="voice-badge">초고음질 AI</span>
+              </div>
+              <p>맑고 다정하며 인간처럼 자연스러운 여성 음성</p>
+            </div>
+            <div class="voice-card" data-voice="sunhi-calm">
+              <div class="voice-card-header">
+                <strong>SunHi Calm (차분한 톤)</strong>
+                <span class="voice-badge">초고음질 AI</span>
+              </div>
+              <p>성숙하고 부드러우며 깊이 있는 차분한 호흡</p>
+            </div>
+            <div class="voice-card" data-voice="browser-native">
+              <div class="voice-card-header">
+                <strong>기기 로컬 음성</strong>
+                <span class="voice-badge sub">기본</span>
+              </div>
+              <p>스마트폰/PC 브라우저 내장 Web Speech 음성</p>
+            </div>
+          </div>
+          <button id="btn-preview-voice" class="secondary-action-btn" style="margin-top: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+            선택한 목소리 미리듣기
+          </button>
+        </div>
+
         <!-- 보안 잠금 -->
         <div class="setting-group">
           <div class="setting-toggle-row">
@@ -420,7 +452,7 @@
     <img id="lightbox-img" src="" alt="확대 보기">
   </div>
 
-  <script src="assets/js/app.js?v=4"></script>
+  <script src="assets/js/app.js?v=5"></script>
   <script>
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {
