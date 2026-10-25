@@ -1330,6 +1330,23 @@ body.font-size-large .message-card { font-size: 16.5px; }
   cursor: pointer;
 }
 
+.turnaround-chat {
+  position: absolute;
+  z-index: 2;
+  top: max(18px, env(safe-area-inset-top));
+  left: max(20px, env(safe-area-inset-left));
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  background: rgba(20, 18, 18, 0.48);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
 .turnaround-panel {
   position: relative;
   width: 100vw;
@@ -1624,6 +1641,8 @@ body.font-size-large .message-card { font-size: 16.5px; }
   object-fit: cover;
   object-position: center top;
   display: block;
+  transform: scale(1.2);
+  transform-origin: center 24%;
 }
 
 .splash-screen.has-pin .splash-image,

@@ -1143,6 +1143,7 @@ dom.imageLightbox.addEventListener('click', (e) => {
 
 // 10. Full body turnaround viewer
 document.getElementById('turnaround-close').addEventListener('click', closeTurnaroundViewer);
+document.getElementById('turnaround-chat').addEventListener('click', closeTurnaroundViewer);
 document.getElementById('turnaround-viewer').addEventListener('click', (e) => {
   if (e.target.id === 'turnaround-viewer') closeTurnaroundViewer();
 });
