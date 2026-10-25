@@ -1,9 +1,9 @@
-const CACHE_NAME = 'jian-chat-v11';
+const CACHE_NAME = 'jian-chat-v13';
 const ASSETS = [
   './',
   './index.html',
-  './assets/css/teams.css?v=10',
-  './assets/js/app.js?v=10',
+  './assets/css/teams.css?v=12',
+  './assets/js/app.js?v=11',
   './assets/img/jian_avatar.jpg?v=7',
   './assets/img/jian_face3.png?v=7',
   './assets/img/turnaround/jian_turn_01.png',

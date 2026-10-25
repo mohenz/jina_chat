@@ -138,7 +138,6 @@ const dom = {
   weatherRain: document.getElementById('weather-rain'),
   weatherOutfitNote: document.getElementById('weather-outfit-note'),
   weatherImage: document.getElementById('weather-image'),
-  weatherImageCaption: document.getElementById('weather-image-caption'),
   weatherUpdatedAt: document.getElementById('weather-updated-at'),
   weatherChatReturn: document.getElementById('weather-chat-return'),
 };
@@ -791,7 +790,6 @@ function setWeatherImage(weather) {
   const source = `assets/img/weather/weather_${String(outfit.image).padStart(2, '0')}.png`;
   dom.weatherImage.src = source;
   dom.weatherOutfitNote.textContent = outfit.note;
-  dom.weatherImageCaption.textContent = '오늘 날씨에 맞춘 지안';
 }
 
 function makeWeatherGreeting(weather, locationName) {

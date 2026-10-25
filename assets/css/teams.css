@@ -1514,9 +1514,9 @@ body.font-size-large .message-card { font-size: 16.5px; }
 .weather-location-btn { cursor: pointer; }
 
 .weather-briefing-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 290px);
-  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 24px;
@@ -1525,7 +1525,7 @@ body.font-size-large .message-card { font-size: 16.5px; }
   backdrop-filter: blur(12px);
 }
 
-.weather-copy { padding: clamp(24px, 5vw, 48px); }
+.weather-copy { order: 2; padding: clamp(24px, 5vw, 48px); }
 .weather-date { color: #948896; font-size: 12px; }
 .weather-place { margin-top: 10px; color: #8b687c; font-size: 13px; font-weight: 700; }
 .weather-copy h2 { margin-top: 14px; font-size: clamp(22px, 3vw, 30px); line-height: 1.35; }
@@ -1563,25 +1563,15 @@ body.font-size-large .message-card { font-size: 16.5px; }
 
 .weather-image-wrap {
   position: relative;
-  min-height: 100%;
+  order: 1;
+  flex: none;
+  height: min(56vh, 520px);
+  min-height: 360px;
   overflow: hidden;
   background: #dceafb;
 }
 
 .weather-image-wrap img { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: contain; object-position: center; }
-
-.weather-image-caption {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  padding: 7px 11px;
-  border: 1px solid rgba(255, 255, 255, 0.62);
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.76);
-  color: #594d5c;
-  font-size: 11px;
-  backdrop-filter: blur(8px);
-}
 
 .weather-source { margin-top: 12px; color: #978e9a; font-size: 10px; text-align: right; }
 
@@ -1610,7 +1600,7 @@ body.font-size-large .message-card { font-size: 16.5px; }
   .weather-screen { padding-right: 14px; padding-left: 14px; }
   .weather-header { min-height: 70px; gap: 9px; }
   .weather-content { padding-top: 14px; }
-  .weather-briefing-card { grid-template-columns: minmax(0, 1fr) minmax(125px, 38%); min-height: 470px; border-radius: 19px; }
+  .weather-briefing-card { min-height: 0; border-radius: 19px; }
   .weather-copy { padding: 20px 14px; }
   .weather-copy h2 { font-size: 20px; }
   .weather-description { font-size: 12px; }
