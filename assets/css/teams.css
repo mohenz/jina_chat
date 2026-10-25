@@ -1331,19 +1331,18 @@ body.font-size-large .message-card { font-size: 16.5px; }
 }
 
 .turnaround-panel {
+  position: relative;
   width: 100vw;
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
-  display: flex;
-  align-items: center;
 }
 
 .turnaround-stage {
-  position: relative;
-  flex: 1;
-  min-height: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1354,6 +1353,9 @@ body.font-size-large .message-card { font-size: 16.5px; }
 }
 
 .turnaround-stage img {
+  display: block;
+  position: absolute;
+  inset: 0;
   height: 100%;
   width: 100%;
   object-fit: contain;
