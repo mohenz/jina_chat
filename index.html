@@ -16,7 +16,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="assets/css/teams.css?v=13">
+  <link rel="stylesheet" href="assets/css/teams.css?v=14">
 </head>
 <body>
 
@@ -504,30 +504,15 @@
   <div id="turnaround-viewer" class="turnaround-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="지안 전신 4방향 보기">
     <button class="turnaround-close" id="turnaround-close" aria-label="닫기">&times;</button>
     <div class="turnaround-panel">
-      <div class="turnaround-heading">
-        <p class="turnaround-kicker">JIAN · FULL VIEW</p>
-        <h2>지안의 네 방향</h2>
-        <p>화살표를 눌러 방향을 돌려보세요</p>
-      </div>
       <div class="turnaround-stage" id="turnaround-stage">
         <button class="turnaround-arrow" id="turnaround-prev" aria-label="이전 방향">‹</button>
         <img id="turnaround-image" src="assets/img/turnaround/jian_turn_01.png" alt="지안 정면 전신">
         <button class="turnaround-arrow" id="turnaround-next" aria-label="다음 방향">›</button>
       </div>
-      <div class="turnaround-footer">
-        <span id="turnaround-label">정면</span>
-        <div class="turnaround-dots" id="turnaround-dots" aria-label="방향 선택">
-          <button class="turnaround-dot active" data-turn="0" aria-label="정면"></button>
-          <button class="turnaround-dot" data-turn="1" aria-label="왼쪽 옆면"></button>
-          <button class="turnaround-dot" data-turn="2" aria-label="뒷면"></button>
-          <button class="turnaround-dot" data-turn="3" aria-label="오른쪽 옆면"></button>
-        </div>
-        <span id="turnaround-count">1 / 4</span>
-      </div>
     </div>
   </div>
 
-  <script src="assets/js/app.js?v=12"></script>
+  <script src="assets/js/app.js?v=13"></script>
   <script>
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {

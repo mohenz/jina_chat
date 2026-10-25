@@ -733,11 +733,6 @@ function showTurnaroundView(index) {
   image.src = view.src;
   image.alt = view.alt;
   image.onload = () => { image.style.opacity = '1'; };
-  document.getElementById('turnaround-label').textContent = view.label;
-  document.getElementById('turnaround-count').textContent = `${turnaroundIndex + 1} / ${TURNAROUND_VIEWS.length}`;
-  document.querySelectorAll('.turnaround-dot').forEach((dot, i) => {
-    dot.classList.toggle('active', i === turnaroundIndex);
-  });
 }
 
 function openTurnaroundViewer() {
@@ -1153,9 +1148,6 @@ document.getElementById('turnaround-viewer').addEventListener('click', (e) => {
 });
 document.getElementById('turnaround-prev').addEventListener('click', () => showTurnaroundView(turnaroundIndex - 1));
 document.getElementById('turnaround-next').addEventListener('click', () => showTurnaroundView(turnaroundIndex + 1));
-document.querySelectorAll('.turnaround-dot').forEach(dot => {
-  dot.addEventListener('click', () => showTurnaroundView(Number(dot.dataset.turn)));
-});
 document.addEventListener('keydown', (e) => {
   if (document.getElementById('turnaround-viewer').style.display !== 'flex') return;
   if (e.key === 'Escape') closeTurnaroundViewer();
