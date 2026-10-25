@@ -1538,6 +1538,9 @@ body.font-size-large .message-card { font-size: 16.5px; }
   margin-top: 24px;
 }
 
+.weather-temperature-main { display: flex; align-items: center; gap: 10px; }
+.weather-icon { width: 48px; height: 48px; display: inline-flex; flex: none; }
+.weather-icon svg { width: 100%; height: 100%; }
 .weather-temperature-row strong { font-size: 54px; line-height: 1; letter-spacing: -0.06em; }
 .weather-temperature-row span { color: #6b626e; font-size: 15px; }
 
@@ -1604,7 +1607,8 @@ body.font-size-large .message-card { font-size: 16.5px; }
   .weather-copy { padding: 20px 14px; }
   .weather-copy h2 { font-size: 20px; }
   .weather-description { font-size: 12px; }
-  .weather-temperature-row { flex-direction: column; gap: 5px; margin-top: 19px; }
+  .weather-temperature-row { flex-direction: column; align-items: flex-start; gap: 5px; margin-top: 19px; }
+  .weather-icon { width: 40px; height: 40px; }
   .weather-temperature-row strong { font-size: 45px; }
   .weather-metrics { grid-template-columns: 1fr; gap: 6px; margin-top: 17px; }
   .weather-metrics div { flex-direction: row; justify-content: space-between; align-items: center; padding: 9px; }

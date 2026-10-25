@@ -132,6 +132,7 @@ const dom = {
   weatherGreeting: document.getElementById('weather-greeting'),
   weatherDescription: document.getElementById('weather-description'),
   weatherTemperature: document.getElementById('weather-temperature'),
+  weatherIcon: document.getElementById('weather-icon'),
   weatherCondition: document.getElementById('weather-condition'),
   weatherLow: document.getElementById('weather-low'),
   weatherHigh: document.getElementById('weather-high'),
@@ -759,6 +760,23 @@ function getWeatherCondition(weather) {
   return '맑음';
 }
 
+function getWeatherIcon(weather) {
+  const pty = Number(weather.precipitationType || 0);
+  const sky = Number(weather.sky || 1);
+  const icons = {
+    sun: '<svg viewBox="0 0 48 48" role="img"><circle cx="24" cy="24" r="9" fill="#f7bd61"/><g stroke="#e4a641" stroke-width="3" stroke-linecap="round"><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9.9 9.9l4.2 4.2M33.9 33.9l4.2 4.2m0-28.2-4.2 4.2m-19.8 19.8-4.2 4.2"/></g></svg>',
+    cloud: '<svg viewBox="0 0 48 48" role="img"><path d="M13 36h22a9 9 0 0 0 .5-18 13 13 0 0 0-24.8 3.7A7.3 7.3 0 0 0 13 36Z" fill="#dce3f0" stroke="#9aa8bf" stroke-width="2.5" stroke-linejoin="round"/></svg>',
+    partly: '<svg viewBox="0 0 48 48" role="img"><circle cx="18" cy="17" r="8" fill="#f7bd61"/><g stroke="#e4a641" stroke-width="2.5" stroke-linecap="round"><path d="M18 3v4M18 27v4M4 17h4M28 17h4M8.1 7.1 11 10m14 14 3 3m0-20-3 3M11 24l-3 3"/></g><path d="M16 39h19a8 8 0 0 0 .4-16 11 11 0 0 0-20.7 3.4A6.4 6.4 0 0 0 16 39Z" fill="#fff" stroke="#9aa8bf" stroke-width="2.2" stroke-linejoin="round"/></svg>',
+    rain: '<svg viewBox="0 0 48 48" role="img"><path d="M12 30h23a8 8 0 0 0 .4-16 11 11 0 0 0-21 3.3A6.5 6.5 0 0 0 12 30Z" fill="#dce3f0" stroke="#9aa8bf" stroke-width="2.3" stroke-linejoin="round"/><g stroke="#62a9e8" stroke-width="3" stroke-linecap="round"><path d="m17 35-2 5m11-5-2 5m11-5-2 5"/></g></svg>',
+    snow: '<svg viewBox="0 0 48 48" role="img"><path d="M12 28h23a8 8 0 0 0 .4-16 11 11 0 0 0-21 3.3A6.5 6.5 0 0 0 12 28Z" fill="#e7ebf4" stroke="#9aa8bf" stroke-width="2.3" stroke-linejoin="round"/><g stroke="#76aee8" stroke-width="2" stroke-linecap="round"><path d="M16 34v7m-3-5 6 3m0-6-6 3m15-5v7m-3-5 6 3m0-6-6 3"/></g></svg>'
+  };
+  if (pty === 3) return icons.snow;
+  if (pty > 0) return icons.rain;
+  if (sky === 4) return icons.cloud;
+  if (sky === 3) return icons.partly;
+  return icons.sun;
+}
+
 function getWeatherOutfit(weather) {
   const pty = Number(weather.precipitationType || 0);
   const temp = Number(weather.temperature ?? 18);
@@ -819,6 +837,7 @@ async function loadWeather(latitude, longitude, locationName) {
 
     const condition = getWeatherCondition(weather);
     const temp = Number(weather.temperature);
+    dom.weatherIcon.innerHTML = getWeatherIcon(weather);
     dom.weatherTemperature.textContent = formatTemperature(weather.temperature);
     dom.weatherCondition.textContent = condition;
     dom.weatherLow.textContent = formatTemperature(weather.minTemperature);

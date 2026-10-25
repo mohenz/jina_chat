@@ -16,7 +16,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="assets/css/teams.css?v=12">
+  <link rel="stylesheet" href="assets/css/teams.css?v=13">
 </head>
 <body>
 
@@ -473,7 +473,10 @@
           <h2 id="weather-greeting">Brian, 오늘 날씨를 살펴볼게요.</h2>
           <p class="weather-description" id="weather-description" aria-live="polite">기상청 예보를 불러오는 중입니다.</p>
           <div class="weather-temperature-row">
-            <strong id="weather-temperature">--°</strong>
+            <div class="weather-temperature-main">
+              <span class="weather-icon" id="weather-icon" aria-hidden="true"></span>
+              <strong id="weather-temperature">--°</strong>
+            </div>
             <span id="weather-condition">날씨 확인 중</span>
           </div>
           <div class="weather-metrics">
@@ -524,7 +527,7 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js?v=11"></script>
+  <script src="assets/js/app.js?v=12"></script>
   <script>
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {
