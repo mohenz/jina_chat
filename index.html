@@ -16,7 +16,7 @@
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="assets/css/teams.css?v=8">
+  <link rel="stylesheet" href="assets/css/teams.css?v=10">
 </head>
 <body>
 
@@ -440,6 +440,59 @@
     </div>
   </div>
 
+  <section id="weather-screen" class="weather-screen" style="display: none;" aria-labelledby="weather-title">
+    <header class="weather-header">
+      <button type="button" class="weather-back-btn" id="weather-back-btn" aria-label="대화방으로 돌아가기">‹</button>
+      <div>
+        <p>JIAN · DAILY BRIEFING</p>
+        <h1 id="weather-title">오늘의 안부와 날씨</h1>
+      </div>
+      <button type="button" class="weather-refresh-btn" id="weather-refresh-btn" aria-label="날씨 새로고침" title="새로고침">↻</button>
+    </header>
+    <main class="weather-content">
+      <div class="weather-location-row">
+        <label for="weather-city-select">지역</label>
+        <select id="weather-city-select" aria-label="날씨 지역 선택">
+          <option value="seoul">서울</option>
+          <option value="busan">부산</option>
+          <option value="incheon">인천</option>
+          <option value="daegu">대구</option>
+          <option value="daejeon">대전</option>
+          <option value="gwangju">광주</option>
+          <option value="ulsan">울산</option>
+          <option value="sejong">세종</option>
+          <option value="jeju">제주</option>
+          <option value="gangneung">강릉</option>
+        </select>
+        <button type="button" class="weather-location-btn" id="weather-location-btn">현재 위치</button>
+      </div>
+      <div class="weather-briefing-card">
+        <div class="weather-copy">
+          <p class="weather-date" id="weather-date"></p>
+          <p class="weather-place" id="weather-place">서울 날씨</p>
+          <h2 id="weather-greeting">Brian, 오늘 날씨를 살펴볼게요.</h2>
+          <p class="weather-description" id="weather-description" aria-live="polite">기상청 예보를 불러오는 중입니다.</p>
+          <div class="weather-temperature-row">
+            <strong id="weather-temperature">--°</strong>
+            <span id="weather-condition">날씨 확인 중</span>
+          </div>
+          <div class="weather-metrics">
+            <div><span>오늘 최저</span><strong id="weather-low">--°</strong></div>
+            <div><span>오늘 최고</span><strong id="weather-high">--°</strong></div>
+            <div><span>강수확률</span><strong id="weather-rain">--%</strong></div>
+          </div>
+          <p class="weather-outfit-note" id="weather-outfit-note">날씨에 맞는 옷차림을 고르고 있어요.</p>
+        </div>
+        <div class="weather-image-wrap">
+          <img id="weather-image" src="assets/img/weather/weather_01.png" alt="오늘 날씨에 어울리는 지안의 옷차림">
+          <span class="weather-image-caption" id="weather-image-caption">오늘의 지안</span>
+        </div>
+      </div>
+      <p class="weather-source">기상청 단기예보 제공 · <span id="weather-updated-at"></span></p>
+      <button type="button" class="weather-chat-return" id="weather-chat-return">대화방으로 돌아가기</button>
+    </main>
+  </section>
+
   <!-- Image Lightbox Modal -->
   <div id="image-lightbox" class="lightbox-overlay" style="display: none;">
     <button class="lightbox-close-btn" id="lightbox-close" aria-label="닫기">&times;</button>
@@ -472,7 +525,7 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js?v=8"></script>
+  <script src="assets/js/app.js?v=10"></script>
   <script>
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {

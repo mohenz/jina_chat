@@ -1,15 +1,29 @@
-const CACHE_NAME = 'jian-chat-v9';
+const CACHE_NAME = 'jian-chat-v11';
 const ASSETS = [
   './',
   './index.html',
-  './assets/css/teams.css?v=8',
-  './assets/js/app.js?v=8',
+  './assets/css/teams.css?v=10',
+  './assets/js/app.js?v=10',
   './assets/img/jian_avatar.jpg?v=7',
   './assets/img/jian_face3.png?v=7',
   './assets/img/turnaround/jian_turn_01.png',
   './assets/img/turnaround/jian_turn_02.png',
   './assets/img/turnaround/jian_turn_03.png',
   './assets/img/turnaround/jian_turn_04.png',
+  './assets/img/weather/weather_01.png',
+  './assets/img/weather/weather_02.png',
+  './assets/img/weather/weather_03.png',
+  './assets/img/weather/weather_04.png',
+  './assets/img/weather/weather_05.png',
+  './assets/img/weather/weather_06.png',
+  './assets/img/weather/weather_07.png',
+  './assets/img/weather/weather_08.png',
+  './assets/img/weather/weather_09.png',
+  './assets/img/weather/weather_10.png',
+  './assets/img/weather/weather_11.png',
+  './assets/img/weather/weather_12.png',
+  './assets/img/weather/weather_13.png',
+  './assets/img/weather/weather_14.png',
   './manifest.json'
 ];
 

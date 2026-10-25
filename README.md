@@ -22,6 +22,12 @@ npm run dev
 npm run check:syntax
 ```
 
+### 날씨 브리핑 설정
+- 기상청 단기예보를 사용하며 API 키는 서버 환경변수 `KMA_SERVICE_KEY`로 읽습니다.
+- 로컬 실행 시 `.env`에 `KMA_SERVICE_KEY=발급받은_인증키`를 설정합니다. `.env`는 Git에 포함하지 않습니다.
+- Vercel 배포 환경에서는 Project Settings의 Environment Variables에 같은 키를 등록해야 날씨 브리핑이 동작합니다.
+- 화면의 상단 왼쪽 버튼을 누르면 브리핑이 열립니다. 지역을 선택하거나 위치 권한을 허용해 현재 위치의 예보를 볼 수 있습니다.
+
 ## 3. 핵심 규칙
 - **No-Emoji Protocol**: 지안의 응답 및 시스템 메시지에서 이모지 사용을 엄격히 금지합니다.
 - **언어 정책**: 한국어 우선 및 정중한 경어체(-요, -습니다) 고정.

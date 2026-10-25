@@ -29,6 +29,18 @@ const TURNAROUND_VIEWS = [
   { src: 'assets/img/turnaround/jian_turn_03.png', label: '뒷면', alt: '지안 뒷면 전신' },
   { src: 'assets/img/turnaround/jian_turn_04.png', label: '오른쪽 옆면', alt: '지안 오른쪽 옆면 전신' }
 ];
+const WEATHER_CITIES = {
+  seoul: { name: '서울', latitude: 37.5665, longitude: 126.9780 },
+  busan: { name: '부산', latitude: 35.1796, longitude: 129.0756 },
+  incheon: { name: '인천', latitude: 37.4563, longitude: 126.7052 },
+  daegu: { name: '대구', latitude: 35.8714, longitude: 128.6014 },
+  daejeon: { name: '대전', latitude: 36.3504, longitude: 127.3845 },
+  gwangju: { name: '광주', latitude: 35.1595, longitude: 126.8526 },
+  ulsan: { name: '울산', latitude: 35.5384, longitude: 129.3114 },
+  sejong: { name: '세종', latitude: 36.4800, longitude: 127.2890 },
+  jeju: { name: '제주', latitude: 33.4996, longitude: 126.5312 },
+  gangneung: { name: '강릉', latitude: 37.7519, longitude: 128.8761 }
+};
 let turnaroundIndex = 0;
 
 // App State
@@ -63,6 +75,7 @@ const dom = {
   headerAvatarTrigger: document.getElementById('header-avatar-trigger'),
   headerNameTrigger: document.getElementById('header-name-trigger'),
   btnVideoCall: document.getElementById('btn-video-call'),
+  btnHeaderBack: document.getElementById('btn-header-back'),
   btnVoiceCall: document.getElementById('btn-voice-call'),
   btnSettings: document.getElementById('btn-settings'),
 
@@ -109,6 +122,25 @@ const dom = {
   imageLightbox: document.getElementById('image-lightbox'),
   lightboxImg: document.getElementById('lightbox-img'),
   lightboxClose: document.getElementById('lightbox-close'),
+  weatherScreen: document.getElementById('weather-screen'),
+  weatherBackBtn: document.getElementById('weather-back-btn'),
+  weatherRefreshBtn: document.getElementById('weather-refresh-btn'),
+  weatherCitySelect: document.getElementById('weather-city-select'),
+  weatherLocationBtn: document.getElementById('weather-location-btn'),
+  weatherDate: document.getElementById('weather-date'),
+  weatherPlace: document.getElementById('weather-place'),
+  weatherGreeting: document.getElementById('weather-greeting'),
+  weatherDescription: document.getElementById('weather-description'),
+  weatherTemperature: document.getElementById('weather-temperature'),
+  weatherCondition: document.getElementById('weather-condition'),
+  weatherLow: document.getElementById('weather-low'),
+  weatherHigh: document.getElementById('weather-high'),
+  weatherRain: document.getElementById('weather-rain'),
+  weatherOutfitNote: document.getElementById('weather-outfit-note'),
+  weatherImage: document.getElementById('weather-image'),
+  weatherImageCaption: document.getElementById('weather-image-caption'),
+  weatherUpdatedAt: document.getElementById('weather-updated-at'),
+  weatherChatReturn: document.getElementById('weather-chat-return'),
 };
 
 /* ========================================================
@@ -717,6 +749,132 @@ function closeTurnaroundViewer() {
   document.getElementById('turnaround-viewer').style.display = 'none';
 }
 
+function getWeatherCondition(weather) {
+  const precipitationType = Number(weather.precipitationType || 0);
+  if (precipitationType === 1) return '비';
+  if (precipitationType === 2) return '비와 눈';
+  if (precipitationType === 3) return '눈';
+  if (precipitationType === 4) return '소나기';
+  if (Number(weather.sky) === 3) return '구름 조금';
+  if (Number(weather.sky) === 4) return '흐림';
+  return '맑음';
+}
+
+function getWeatherOutfit(weather) {
+  const pty = Number(weather.precipitationType || 0);
+  const temp = Number(weather.temperature ?? 18);
+  const wind = Number(weather.windSpeed || 0);
+  const sky = Number(weather.sky || 1);
+  const hour = new Date().getHours();
+  const month = new Date().getMonth() + 1;
+
+  if (pty === 3) return temp <= 0
+    ? { image: 8, note: '눈길에 따뜻한 코트와 목도리, 미끄럽지 않은 신발을 챙겼어요.' }
+    : { image: 5, note: '눈이 내려 포근한 패딩과 장갑을 준비했어요.' };
+  if (pty === 2) return { image: 10, note: '비와 눈이 섞여 내려 방수되는 겉옷과 따뜻한 신발을 챙겼어요.' };
+  if (pty === 1 || pty === 4) return { image: pty === 4 ? 10 : 4, note: '비에 젖지 않도록 우산과 가벼운 방수 겉옷을 챙겼어요.' };
+  if (temp >= 29) return { image: 7, note: '더운 날씨라 시원하고 가벼운 옷을 골랐어요. 물도 자주 마셔요.' };
+  if (temp <= 0) return { image: 8, note: '매우 추운 날씨라 두꺼운 코트와 목도리로 따뜻하게 입었어요.' };
+  if (temp <= 7) return { image: 9, note: '쌀쌀해서 포근한 코트와 따뜻한 신발을 신었어요.' };
+  if (wind >= 7) return { image: 6, note: '바람이 제법 불어 바람막이 겉옷을 걸쳤어요.' };
+  if (hour < 6 || hour >= 19) return { image: 14, note: '저녁 공기에 맞춰 가벼운 겉옷을 더했어요.' };
+  if (sky === 4) return { image: 3, note: '흐린 날에도 편안하도록 얇은 겉옷을 준비했어요.' };
+  if (sky === 3) return { image: 2, note: '구름이 조금 있어 산뜻한 옷차림에 가벼운 가디건을 더했어요.' };
+  if (month >= 3 && month <= 5) return { image: 1, note: '봄 날씨에 어울리는 산뜻한 옷차림으로 준비했어요.' };
+  if (month >= 6 && month <= 8) return { image: 13, note: '따뜻한 계절에 어울리는 가벼운 옷차림이에요.' };
+  if (month >= 9 && month <= 11) return { image: 12, note: '선선한 가을 날씨라 포근한 가디건을 걸쳤어요.' };
+  return { image: 11, note: '겨울 날씨에 맞춰 따뜻하게 입었어요.' };
+}
+
+function setWeatherImage(weather) {
+  const outfit = getWeatherOutfit(weather);
+  const source = `assets/img/weather/weather_${String(outfit.image).padStart(2, '0')}.png`;
+  dom.weatherImage.src = source;
+  dom.weatherOutfitNote.textContent = outfit.note;
+  dom.weatherImageCaption.textContent = '오늘 날씨에 맞춘 지안';
+}
+
+function makeWeatherGreeting(weather, locationName) {
+  const pty = Number(weather.precipitationType || 0);
+  const temperature = Number(weather.temperature);
+  if (pty === 1 || pty === 4) return `Brian, ${locationName}에 비 소식이 있어요. 우산 챙기셨는지 확인해 주세요.`;
+  if (pty === 2 || pty === 3) return `Brian, ${locationName}에 눈 예보가 있어요. 따뜻하게 입고 천천히 이동해요.`;
+  if (temperature >= 29) return `Brian, 오늘은 꽤 더워요. 시원하게 입고 물도 챙겨요.`;
+  if (temperature <= 5) return `Brian, 오늘은 쌀쌀해요. 외출할 때 따뜻한 겉옷을 챙겨요.`;
+  return `좋은 하루예요, Brian. ${locationName}의 오늘 날씨와 옷차림을 준비했어요.`;
+}
+
+function formatTemperature(value) {
+  if (value === null || value === undefined || value === '') return '--°';
+  return Number.isFinite(Number(value)) ? `${Math.round(Number(value))}°` : '--°';
+}
+
+async function loadWeather(latitude, longitude, locationName) {
+  dom.weatherPlace.textContent = `${locationName} 날씨`;
+  dom.weatherDescription.textContent = '기상청 예보를 불러오는 중입니다.';
+  dom.weatherRefreshBtn.disabled = true;
+  try {
+    const params = new URLSearchParams({ lat: String(latitude), lon: String(longitude), location: locationName });
+    const response = await fetch(`/api/weather?${params.toString()}`, { cache: 'no-store' });
+    const weather = await response.json();
+    if (!response.ok) throw new Error(weather.error || '날씨 정보를 불러오지 못했습니다.');
+
+    const condition = getWeatherCondition(weather);
+    const temp = Number(weather.temperature);
+    dom.weatherTemperature.textContent = formatTemperature(weather.temperature);
+    dom.weatherCondition.textContent = condition;
+    dom.weatherLow.textContent = formatTemperature(weather.minTemperature);
+    dom.weatherHigh.textContent = formatTemperature(weather.maxTemperature);
+    dom.weatherRain.textContent = `${Math.round(Number(weather.precipitationProbability || 0))}%`;
+    dom.weatherDescription.textContent = `오늘은 ${condition} 예보예요. 최고 ${formatTemperature(weather.maxTemperature)}, 최저 ${formatTemperature(weather.minTemperature)}로 예상돼요.`;
+    dom.weatherGreeting.textContent = makeWeatherGreeting(weather, locationName);
+    dom.weatherUpdatedAt.textContent = `예보 기준 ${weather.forecastTime ? `${weather.forecastTime.slice(0, 2)}시` : '오늘'} · 조회 ${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}`;
+    setWeatherImage({ ...weather, temperature: Number.isFinite(temp) ? temp : 18 });
+  } catch (error) {
+    dom.weatherGreeting.textContent = 'Brian, 날씨 정보를 가져오지 못했어요.';
+    dom.weatherDescription.textContent = error.message;
+    dom.weatherUpdatedAt.textContent = '연결을 확인한 뒤 새로고침해 주세요.';
+  } finally {
+    dom.weatherRefreshBtn.disabled = false;
+  }
+}
+
+function loadSelectedCityWeather() {
+  const city = WEATHER_CITIES[dom.weatherCitySelect.value] || WEATHER_CITIES.seoul;
+  localStorage.setItem('jian_weather_city', dom.weatherCitySelect.value);
+  loadWeather(city.latitude, city.longitude, city.name);
+}
+
+function loadCurrentLocationWeather() {
+  if (!navigator.geolocation) {
+    dom.weatherDescription.textContent = '이 브라우저에서는 현재 위치를 확인할 수 없습니다. 지역 목록에서 선택해 주세요.';
+    return;
+  }
+  dom.weatherDescription.textContent = '현재 위치를 확인하고 있습니다.';
+  navigator.geolocation.getCurrentPosition(
+    position => loadWeather(position.coords.latitude, position.coords.longitude, '현재 위치'),
+    () => {
+      dom.weatherDescription.textContent = '위치 권한을 사용할 수 없어 선택한 지역의 날씨를 보여드릴게요.';
+      loadSelectedCityWeather();
+    },
+    { enableHighAccuracy: false, timeout: 10000, maximumAge: 15 * 60 * 1000 }
+  );
+}
+
+function openWeatherBriefing() {
+  const cityId = localStorage.getItem('jian_weather_city') || 'seoul';
+  dom.weatherCitySelect.value = WEATHER_CITIES[cityId] ? cityId : 'seoul';
+  dom.weatherDate.textContent = new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'
+  }).format(new Date());
+  dom.weatherScreen.style.display = 'flex';
+  loadSelectedCityWeather();
+}
+
+function closeWeatherBriefing() {
+  dom.weatherScreen.style.display = 'none';
+}
+
 function calculateDDay() {
   // 기준일: 2026년 7월 6일 (Bloom Universe 공식 첫 교감일)
   const baseDate = new Date('2026-07-06');
@@ -817,6 +975,12 @@ dom.headerNameTrigger.addEventListener('click', () => {
 dom.btnSettings.addEventListener('click', () => {
   dom.settingsModal.style.display = 'flex';
 });
+dom.btnHeaderBack.addEventListener('click', openWeatherBriefing);
+dom.weatherBackBtn.addEventListener('click', closeWeatherBriefing);
+dom.weatherChatReturn.addEventListener('click', closeWeatherBriefing);
+dom.weatherRefreshBtn.addEventListener('click', loadSelectedCityWeather);
+dom.weatherCitySelect.addEventListener('change', loadSelectedCityWeather);
+dom.weatherLocationBtn.addEventListener('click', loadCurrentLocationWeather);
 dom.btnVideoCall.addEventListener('click', () => {
   openTurnaroundViewer();
 });
