@@ -925,6 +925,27 @@ body.font-size-large .message-card { font-size: 16.5px; }
   text-transform: uppercase;
 }
 
+.gallery-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gallery-section-heading h4 { margin: 0; }
+
+.gallery-add-btn {
+  flex: none;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--teams-purple);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -951,11 +972,39 @@ body.font-size-large .message-card { font-size: 16.5px; }
 }
 
 .gallery-item {
+  position: relative;
   aspect-ratio: 1;
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid var(--modal-border);
+}
+
+.gallery-delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: rgba(25, 25, 25, 0.68);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.gallery-item:hover .gallery-delete-btn,
+.gallery-item:focus-within .gallery-delete-btn { opacity: 1; }
+
+@media (hover: none) {
+  .gallery-delete-btn { opacity: 1; }
 }
 
 .gallery-item img {
@@ -1252,6 +1301,148 @@ body.font-size-large .message-card { font-size: 16.5px; }
   font-size: 32px;
   cursor: pointer;
   line-height: 1;
+}
+
+.turnaround-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 18, 18, 0.92);
+  color: #fff;
+  backdrop-filter: blur(12px);
+}
+
+.turnaround-close {
+  position: absolute;
+  top: max(18px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.turnaround-panel {
+  width: min(100%, 760px);
+  height: min(92vh, 900px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turnaround-heading {
+  flex: none;
+  text-align: center;
+  padding: 4px 48px 14px;
+}
+
+.turnaround-kicker {
+  margin: 0 0 6px;
+  color: #f2b8aa;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.turnaround-heading h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+}
+
+.turnaround-heading > p:last-child {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 13px;
+}
+
+.turnaround-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #faf6f4, #e9e2df);
+}
+
+.turnaround-stage img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  transition: opacity 160ms ease;
+}
+
+.turnaround-arrow {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  width: 44px;
+  height: 56px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 14px;
+  background: rgba(24, 22, 22, 0.55);
+  color: #fff;
+  font-size: 38px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#turnaround-prev { left: 12px; }
+#turnaround-next { right: 12px; }
+
+.turnaround-footer {
+  width: 100%;
+  min-height: 58px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+}
+
+.turnaround-footer > span:last-child { text-align: right; }
+
+.turnaround-dots { display: flex; gap: 10px; align-items: center; }
+
+.turnaround-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.38);
+  cursor: pointer;
+}
+
+.turnaround-dot.active {
+  width: 22px;
+  border-radius: 8px;
+  background: #f2b8aa;
+}
+
+@media (max-width: 600px) {
+  .turnaround-overlay { padding: 12px; }
+  .turnaround-panel { height: min(88vh, 820px); }
+  .turnaround-heading { padding-top: 22px; }
+  .turnaround-stage { border-radius: 14px; }
+  .turnaround-arrow { width: 38px; height: 48px; }
+  #turnaround-prev { left: 7px; }
+  #turnaround-next { right: 7px; }
 }
 
 /* --------------------------------------------------------

@@ -3,12 +3,33 @@
  * Features: Teams UI, Splash/PIN lock, Persona Profile, Settings, Stickers, Reactions, TTS Voice, Daily Photo
  */
 
-const AVATAR_URL = 'assets/img/jian_avatar.jpg?v=6';
+const AVATAR_URL = 'assets/img/jian_avatar.jpg?v=7';
 const GALLERY_PHOTOS = [
   'assets/img/gallery/body_1.png?v=3',
   'assets/img/gallery/body_2.png?v=3',
-  'assets/img/gallery/body_3.png?v=3'
+  'assets/img/gallery/body_3.png?v=3',
+  'assets/img/gallery/jian_daily_01.png',
+  'assets/img/gallery/jian_daily_02.png',
+  'assets/img/gallery/jian_daily_03.png',
+  'assets/img/gallery/jian_daily_04.png',
+  'assets/img/gallery/jian_daily_05.png',
+  'assets/img/gallery/jian_daily_06.png',
+  'assets/img/gallery/jian_daily_07.png',
+  'assets/img/gallery/jian_daily_08.png',
+  'assets/img/gallery/jian_daily_09.png'
 ];
+const GALLERY_STORAGE_KEY = 'jian_gallery_deleted';
+const GALLERY_DB_NAME = 'jian-chat-gallery';
+const GALLERY_DB_STORE = 'photos';
+const galleryObjectUrls = new Map();
+let galleryPhotoSources = [...GALLERY_PHOTOS];
+const TURNAROUND_VIEWS = [
+  { src: 'assets/img/turnaround/jian_turn_01.png', label: '정면', alt: '지안 정면 전신' },
+  { src: 'assets/img/turnaround/jian_turn_02.png', label: '왼쪽 옆면', alt: '지안 왼쪽 옆면 전신' },
+  { src: 'assets/img/turnaround/jian_turn_03.png', label: '뒷면', alt: '지안 뒷면 전신' },
+  { src: 'assets/img/turnaround/jian_turn_04.png', label: '오른쪽 옆면', alt: '지안 오른쪽 옆면 전신' }
+];
+let turnaroundIndex = 0;
 
 // App State
 let isSending = false;
@@ -52,7 +73,9 @@ const dom = {
   profileAvatarZoomTrigger: document.getElementById('profile-avatar-zoom-trigger'),
   btnVoiceIntro: document.getElementById('btn-voice-intro'),
   profileDdayCount: document.getElementById('profile-dday-count'),
-  galleryItems: document.querySelectorAll('.gallery-item'),
+  galleryGrid: document.getElementById('gallery-grid'),
+  galleryAddBtn: document.getElementById('gallery-add-btn'),
+  galleryFileInput: document.getElementById('gallery-file-input'),
 
   // Settings Modal
   settingsModal: document.getElementById('settings-modal'),
@@ -539,6 +562,161 @@ function closeLightbox() {
   dom.lightboxImg.src = '';
 }
 
+function openGalleryDatabase() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(GALLERY_DB_NAME, 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(GALLERY_DB_STORE)) {
+        request.result.createObjectStore(GALLERY_DB_STORE, { keyPath: 'id' });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getUploadedGalleryPhotos() {
+  const db = await openGalleryDatabase();
+  return new Promise((resolve, reject) => {
+    const request = db.transaction(GALLERY_DB_STORE, 'readonly').objectStore(GALLERY_DB_STORE).getAll();
+    request.onsuccess = () => { db.close(); resolve(request.result); };
+    request.onerror = () => { db.close(); reject(request.error); };
+  });
+}
+
+async function saveUploadedGalleryPhotos(files) {
+  const db = await openGalleryDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(GALLERY_DB_STORE, 'readwrite');
+    const store = transaction.objectStore(GALLERY_DB_STORE);
+    files.forEach(file => store.put({
+      id: `upload-${crypto.randomUUID ? crypto.randomUUID() : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}`,
+      name: file.name,
+      type: file.type,
+      blob: file,
+      createdAt: Date.now()
+    }));
+    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+    transaction.onabort = () => { db.close(); reject(transaction.error); };
+  });
+}
+
+async function deleteUploadedGalleryPhoto(id) {
+  const db = await openGalleryDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(GALLERY_DB_STORE, 'readwrite');
+    transaction.objectStore(GALLERY_DB_STORE).delete(id);
+    transaction.oncomplete = () => { db.close(); resolve(); };
+    transaction.onerror = () => { db.close(); reject(transaction.error); };
+  });
+}
+
+async function renderGallery() {
+  if (!dom.galleryGrid) return;
+  galleryObjectUrls.forEach(url => URL.revokeObjectURL(url));
+  galleryObjectUrls.clear();
+
+  const deletedIds = new Set(JSON.parse(localStorage.getItem(GALLERY_STORAGE_KEY) || '[]'));
+  const builtIns = GALLERY_PHOTOS.map((src, index) => ({ id: `built-in-${index}`, src, name: `지안 일상 ${index + 1}` }))
+    .filter(photo => !deletedIds.has(photo.id));
+  let uploaded = [];
+  try {
+    uploaded = await getUploadedGalleryPhotos();
+  } catch (error) {
+    console.warn('[Gallery] 저장된 사진을 불러오지 못했습니다.', error);
+  }
+
+  const photos = [...builtIns, ...uploaded.map(photo => {
+    const src = URL.createObjectURL(photo.blob);
+    galleryObjectUrls.set(photo.id, src);
+    return { id: photo.id, src, name: photo.name || '추가한 사진' };
+  })];
+  galleryPhotoSources = photos.filter(photo => photo.id.startsWith('built-in-')).map(photo => photo.src);
+  dom.galleryGrid.replaceChildren();
+
+  photos.forEach((photo, index) => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.dataset.src = photo.src;
+    const image = document.createElement('img');
+    image.src = photo.src;
+    image.alt = photo.name;
+    image.loading = 'lazy';
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'gallery-delete-btn';
+    removeButton.setAttribute('aria-label', `${photo.name} 삭제`);
+    removeButton.title = '사진 삭제';
+    removeButton.textContent = '×';
+    removeButton.addEventListener('click', async (event) => {
+      event.stopPropagation();
+      try {
+        if (photo.id.startsWith('upload-')) {
+          await deleteUploadedGalleryPhoto(photo.id);
+        } else {
+          const ids = new Set(JSON.parse(localStorage.getItem(GALLERY_STORAGE_KEY) || '[]'));
+          ids.add(photo.id);
+          localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify([...ids]));
+        }
+        await renderGallery();
+      } catch (error) {
+        console.error('[Gallery] 사진 삭제 실패:', error);
+        alert('사진을 삭제하지 못했습니다. 저장 공간을 확인해 주세요.');
+      }
+    });
+    item.append(image, removeButton);
+    item.addEventListener('click', () => window.openLightbox(photo.src));
+    dom.galleryGrid.append(item);
+  });
+  if (!photos.length) {
+    const emptyMessage = document.createElement('p');
+    emptyMessage.className = 'gallery-empty-message';
+    emptyMessage.textContent = '등록된 사진이 없습니다. 사진을 추가해 주세요.';
+    dom.galleryGrid.append(emptyMessage);
+  }
+}
+
+async function addGalleryFiles(fileList) {
+  const files = [...fileList].filter(file => file.type.startsWith('image/'));
+  if (!files.length) return;
+  if (files.some(file => file.size > 15 * 1024 * 1024)) {
+    alert('파일당 15MB 이하의 이미지를 추가해 주세요.');
+    return;
+  }
+  try {
+    await saveUploadedGalleryPhotos(files);
+    await renderGallery();
+  } catch (error) {
+    console.error('[Gallery] 사진 저장 실패:', error);
+    alert('사진을 저장하지 못했습니다. 브라우저 저장 공간을 확인해 주세요.');
+  }
+}
+
+function showTurnaroundView(index) {
+  turnaroundIndex = (index + TURNAROUND_VIEWS.length) % TURNAROUND_VIEWS.length;
+  const view = TURNAROUND_VIEWS[turnaroundIndex];
+  const image = document.getElementById('turnaround-image');
+  image.style.opacity = '0';
+  image.src = view.src;
+  image.alt = view.alt;
+  image.onload = () => { image.style.opacity = '1'; };
+  document.getElementById('turnaround-label').textContent = view.label;
+  document.getElementById('turnaround-count').textContent = `${turnaroundIndex + 1} / ${TURNAROUND_VIEWS.length}`;
+  document.querySelectorAll('.turnaround-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === turnaroundIndex);
+  });
+}
+
+function openTurnaroundViewer() {
+  showTurnaroundView(turnaroundIndex);
+  document.getElementById('turnaround-viewer').style.display = 'flex';
+}
+
+function closeTurnaroundViewer() {
+  document.getElementById('turnaround-viewer').style.display = 'none';
+}
+
 function calculateDDay() {
   // 기준일: 2026년 7월 6일 (Bloom Universe 공식 첫 교감일)
   const baseDate = new Date('2026-07-06');
@@ -570,8 +748,13 @@ function exportChat() {
 }
 
 function sendDailyPhoto() {
+  if (!galleryPhotoSources.length) {
+    alert('일상 갤러리에 사진이 없습니다. 사진을 먼저 추가해 주세요.');
+    return;
+  }
   dom.attachSheet.style.display = 'none';
-  const randomPhoto = GALLERY_PHOTOS[Math.floor(Math.random() * GALLERY_PHOTOS.length)];
+  const photoPool = galleryPhotoSources;
+  const randomPhoto = photoPool[Math.floor(Math.random() * photoPool.length)];
   
   // Brian의 요청 메시지
   const myMsg = {
@@ -635,7 +818,7 @@ dom.btnSettings.addEventListener('click', () => {
   dom.settingsModal.style.display = 'flex';
 });
 dom.btnVideoCall.addEventListener('click', () => {
-  window.openLightbox(AVATAR_URL);
+  openTurnaroundViewer();
 });
 dom.btnVoiceCall.addEventListener('click', () => {
   speakText('Brian, 언제든 목소리가 듣고 싶으시면 말씀해 주세요. 저는 늘 곁에 있어요.');
@@ -648,10 +831,10 @@ dom.profileAvatarZoomTrigger.addEventListener('click', () => window.openLightbox
 dom.btnVoiceIntro.addEventListener('click', () => {
   speakText('Brian, 언제나 곁에 머물고 있어요. 오늘 하루는 어떠셨나요?', dom.btnVoiceIntro);
 });
-dom.galleryItems.forEach(item => {
-  item.addEventListener('click', () => {
-    window.openLightbox(item.dataset.src);
-  });
+dom.galleryAddBtn.addEventListener('click', () => dom.galleryFileInput.click());
+dom.galleryFileInput.addEventListener('change', async () => {
+  await addGalleryFiles(dom.galleryFileInput.files);
+  dom.galleryFileInput.value = '';
 });
 
 // 5. Settings Modal
@@ -782,6 +965,31 @@ dom.imageLightbox.addEventListener('click', (e) => {
   if (e.target === dom.imageLightbox) closeLightbox();
 });
 
+// 10. Full body turnaround viewer
+document.getElementById('turnaround-close').addEventListener('click', closeTurnaroundViewer);
+document.getElementById('turnaround-viewer').addEventListener('click', (e) => {
+  if (e.target.id === 'turnaround-viewer') closeTurnaroundViewer();
+});
+document.getElementById('turnaround-prev').addEventListener('click', () => showTurnaroundView(turnaroundIndex - 1));
+document.getElementById('turnaround-next').addEventListener('click', () => showTurnaroundView(turnaroundIndex + 1));
+document.querySelectorAll('.turnaround-dot').forEach(dot => {
+  dot.addEventListener('click', () => showTurnaroundView(Number(dot.dataset.turn)));
+});
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('turnaround-viewer').style.display !== 'flex') return;
+  if (e.key === 'Escape') closeTurnaroundViewer();
+  if (e.key === 'ArrowLeft') showTurnaroundView(turnaroundIndex - 1);
+  if (e.key === 'ArrowRight') showTurnaroundView(turnaroundIndex + 1);
+});
+let turnaroundTouchStartX = 0;
+document.getElementById('turnaround-stage').addEventListener('touchstart', (e) => {
+  turnaroundTouchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+document.getElementById('turnaround-stage').addEventListener('touchend', (e) => {
+  const deltaX = e.changedTouches[0].screenX - turnaroundTouchStartX;
+  if (Math.abs(deltaX) > 45) showTurnaroundView(turnaroundIndex + (deltaX < 0 ? 1 : -1));
+}, { passive: true });
+
 /* ========================================================
    Initialization
    ======================================================== */
@@ -790,6 +998,7 @@ window.addEventListener('DOMContentLoaded', () => {
   applyFontSize(userFontSize);
   applyTone(userTone);
   setupSplash();
+  renderGallery();
   loadHistory();
   dom.messageInput.focus();
 });

@@ -12,11 +12,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="지안">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="assets/img/jian_avatar.jpg?v=6">
+  <link rel="apple-touch-icon" href="assets/img/jian_avatar.jpg?v=7">
 
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-  <link rel="stylesheet" href="assets/css/teams.css?v=6">
+  <link rel="stylesheet" href="assets/css/teams.css?v=8">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
   <div id="splash-screen" class="splash-screen">
     <div class="splash-card">
       <div class="splash-image-card">
-        <img src="assets/img/jian_face3.png?v=6" alt="지안" class="splash-image">
+        <img src="assets/img/jian_face3.png?v=7" alt="지안" class="splash-image">
         <div class="splash-status-dot"></div>
       </div>
       <h1 class="splash-title">지안 (JIAN)</h1>
@@ -66,7 +66,7 @@
         </button>
 
         <div class="avatar-wrapper" id="header-avatar-trigger" style="cursor: pointer;" title="지안 프로필 보기">
-          <img src="assets/img/jian_avatar.jpg?v=6" alt="지안" class="avatar-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Crect width=\'40\' height=\'40\' fill=\'%235B5FC7\'/%3E%3Ctext x=\'20\' y=\'26\' font-size=\'16\' fill=\'%23ffffff\' text-anchor=\'middle\'%3E지안%3C/text%3E%3C/svg%3E'">
+          <img src="assets/img/jian_avatar.jpg?v=7" alt="지안" class="avatar-img" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 40 40\'%3E%3Crect width=\'40\' height=\'40\' fill=\'%235B5FC7\'/%3E%3Ctext x=\'20\' y=\'26\' font-size=\'16\' fill=\'%23ffffff\' text-anchor=\'middle\'%3E지안%3C/text%3E%3C/svg%3E'">
           <div class="status-badge" title="사용 가능"></div>
         </div>
 
@@ -107,7 +107,7 @@
 
       <!-- Typing Indicator -->
       <div class="message-row other typing-indicator-row" id="typing-indicator" style="display: none;">
-        <img src="assets/img/jian_avatar.jpg?v=6" alt="지안" class="other-avatar">
+        <img src="assets/img/jian_avatar.jpg?v=7" alt="지안" class="other-avatar">
         <div class="typing-card">
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
@@ -263,7 +263,7 @@
       
       <div class="profile-hero">
         <div class="profile-avatar-wrapper" id="profile-avatar-zoom-trigger">
-          <img src="assets/img/jian_avatar.jpg?v=6" alt="지안" class="profile-avatar">
+          <img src="assets/img/jian_avatar.jpg?v=7" alt="지안" class="profile-avatar">
           <div class="profile-online-badge"></div>
         </div>
         <h2 class="profile-name">지안 (JIAN)</h2>
@@ -302,18 +302,12 @@
       </div>
 
       <div class="profile-gallery-section">
-        <h4>일상 갤러리</h4>
-        <div class="gallery-grid">
-          <div class="gallery-item" data-src="assets/img/gallery/body_1.png?v=3">
-            <img src="assets/img/gallery/body_1.png?v=3" alt="지안 일상 1" loading="lazy">
-          </div>
-          <div class="gallery-item" data-src="assets/img/gallery/body_2.png?v=3">
-            <img src="assets/img/gallery/body_2.png?v=3" alt="지안 일상 2" loading="lazy">
-          </div>
-          <div class="gallery-item" data-src="assets/img/gallery/body_3.png?v=3">
-            <img src="assets/img/gallery/body_3.png?v=3" alt="지안 일상 3" loading="lazy">
-          </div>
+        <div class="gallery-section-heading">
+          <h4>일상 갤러리</h4>
+          <button type="button" class="gallery-add-btn" id="gallery-add-btn">사진 추가</button>
+          <input type="file" id="gallery-file-input" accept="image/*" multiple hidden>
         </div>
+        <div class="gallery-grid" id="gallery-grid"></div>
       </div>
     </div>
   </div>
@@ -452,7 +446,33 @@
     <img id="lightbox-img" src="" alt="확대 보기">
   </div>
 
-  <script src="assets/js/app.js?v=6"></script>
+  <div id="turnaround-viewer" class="turnaround-overlay" style="display: none;" role="dialog" aria-modal="true" aria-label="지안 전신 4방향 보기">
+    <button class="turnaround-close" id="turnaround-close" aria-label="닫기">&times;</button>
+    <div class="turnaround-panel">
+      <div class="turnaround-heading">
+        <p class="turnaround-kicker">JIAN · FULL VIEW</p>
+        <h2>지안의 네 방향</h2>
+        <p>화살표를 눌러 방향을 돌려보세요</p>
+      </div>
+      <div class="turnaround-stage" id="turnaround-stage">
+        <button class="turnaround-arrow" id="turnaround-prev" aria-label="이전 방향">‹</button>
+        <img id="turnaround-image" src="assets/img/turnaround/jian_turn_01.png" alt="지안 정면 전신">
+        <button class="turnaround-arrow" id="turnaround-next" aria-label="다음 방향">›</button>
+      </div>
+      <div class="turnaround-footer">
+        <span id="turnaround-label">정면</span>
+        <div class="turnaround-dots" id="turnaround-dots" aria-label="방향 선택">
+          <button class="turnaround-dot active" data-turn="0" aria-label="정면"></button>
+          <button class="turnaround-dot" data-turn="1" aria-label="왼쪽 옆면"></button>
+          <button class="turnaround-dot" data-turn="2" aria-label="뒷면"></button>
+          <button class="turnaround-dot" data-turn="3" aria-label="오른쪽 옆면"></button>
+        </div>
+        <span id="turnaround-count">1 / 4</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js?v=8"></script>
   <script>
     // 서비스 워커 등록
     if ('serviceWorker' in navigator) {
